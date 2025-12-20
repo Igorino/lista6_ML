@@ -17,6 +17,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 model = LogisticRegression(max_iter=1000)
 model.fit(x_train, y_train)
 
-acc = model.score(x_test, y_test)
+y_pred = model.predict(x_test)
+acc = (y_pred == y_test).mean()
 print("Acurácia:", acc)
 
