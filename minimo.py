@@ -32,6 +32,9 @@ print("Acurácia:", acc)
 print("Matriz de confusão:")
 print(confusion_matrix(y_test, y_pred))
 
+print("[[TN, FP],")
+print("[FN, TP]]")
+
 print("\nRelatório:")
 print(classification_report(y_test, y_pred, digits=4))
 
