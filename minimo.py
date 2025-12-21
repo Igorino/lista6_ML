@@ -5,6 +5,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, roc_auc_score
 
+# Repositório em https://github.com/Igorino/lista6_ML
+
 df = pd.read_csv("diabetes.xls")
 
 print(df.head())
