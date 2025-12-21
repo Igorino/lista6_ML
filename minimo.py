@@ -39,24 +39,34 @@ def eval_model(name, model):
 
     return acc
 
-model = Pipeline([
+
+linear = Pipeline([
     ("scaler", StandardScaler()),
-    ("clf", LogisticRegression(max_iter=2000))
+    ("clf", LogisticRegression(penalty="l2", C=1e6, solver="lbfgs", max_iter=3000))
 ])
 
-model.fit(x_train, y_train)
+l2 = Pipeline([
+    ("scaler", StandardScaler()),
+    ("clf", LogisticRegression(penalty="l2", C=1.0, solver="lbfgs", max_iter=3000))
+])
 
-y_pred = model.predict(x_test)
+elastic = Pipeline([
+    ("scaler", StandardScaler()),
+    ("clf", LogisticRegression(
+        penalty="elasticnet", l1_ratio=0.5, C=1.0,
+        solver="saga", max_iter=5000
+    ))
+])
 
-acc = (y_pred == y_test).mean()
-print("Acurácia:", acc)
+acc_linear = eval_model("Linear (no penalty)", linear)
+acc_l2 = eval_model("Linear + L2 (ridge)", l2)
+acc_elastic = eval_model("Linear + Elastic Net", elastic)
 
-print("Matriz de confusão:")
-print(confusion_matrix(y_test, y_pred))
+print("\n" + "-" * 80)
+print("Resumo (acurácia):")
+print(f"Linear:      {acc_linear:.4f}")
+print(f"L2 (ridge):  {acc_l2:.4f}")
+print(f"Elastic Net: {acc_elastic:.4f}")
 
-print("[[TN, FP],")
-print("[FN, TP]]")
-
-print("\nRelatório:")
-print(classification_report(y_test, y_pred, digits=4))
-
+# Basicamente, o modelo linear simples e o L2 tiveram praticamente o mesmo resultado.
+# O Elastic Net teve uma elve queda na acurácia, mas manteve o ROC-AUC alto.
